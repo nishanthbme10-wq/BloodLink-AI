@@ -1,0 +1,180 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "System users including Admin, Hospital, and Blood Bank representatives",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "User ID matching Auth UID" },
+        "email": { "type": "string", "format": "email", "description": "Registered email address" },
+        "role": { "type": "string", "enum": ["admin", "hospital", "blood_bank"], "description": "System access role" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["id", "email", "role"]
+    },
+    "Hospital": {
+      "title": "Hospital",
+      "description": "Hospital profiles managing emergency blood requests",
+      "type": "object",
+      "properties": {
+        "hospital_id": { "type": "string", "description": "Matches user ID" },
+        "hospital_name": { "type": "string", "description": "Hospital display name" },
+        "state": { "type": "string", "description": "State" },
+        "district": { "type": "string", "description": "District" },
+        "city": { "type": "string", "description": "City" },
+        "pincode": { "type": "string", "description": "Area pincode" },
+        "contact": { "type": "string", "description": "Contact number" },
+        "email": { "type": "string", "description": "Email" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["hospital_id", "hospital_name", "state", "district", "city", "pincode", "contact", "email"]
+    },
+    "BloodBank": {
+      "title": "BloodBank",
+      "description": "Blood bank profiles managing inventories and transfers",
+      "type": "object",
+      "properties": {
+        "bank_id": { "type": "string", "description": "Matches user ID" },
+        "bank_name": { "type": "string", "description": "Blood bank name" },
+        "state": { "type": "string", "description": "State" },
+        "district": { "type": "string", "description": "District" },
+        "city": { "type": "string", "description": "City" },
+        "pincode": { "type": "string", "description": "Area pincode" },
+        "contact": { "type": "string", "description": "Contact number" },
+        "email": { "type": "string", "description": "Email" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["bank_id", "bank_name", "state", "district", "city", "pincode", "contact", "email"]
+    },
+    "Donor": {
+      "title": "Donor",
+      "description": "Public blood donors registering on the platform",
+      "type": "object",
+      "properties": {
+        "donor_id": { "type": "string", "description": "Auto-generated document ID" },
+        "name": { "type": "string", "description": "Donor's full name" },
+        "age": { "type": "integer", "description": "Age, minimum 18" },
+        "gender": { "type": "string", "enum": ["Male", "Female", "Other"] },
+        "blood_group": { "type": "string", "enum": ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] },
+        "phone": { "type": "string", "description": "Contact number" },
+        "email": { "type": "string", "format": "email", "description": "Email address" },
+        "state": { "type": "string" },
+        "district": { "type": "string" },
+        "city": { "type": "string" },
+        "area": { "type": "string" },
+        "pincode": { "type": "string" },
+        "last_donation_date": { "type": "string", "format": "date", "description": "YYYY-MM-DD format" },
+        "availability": { "type": "boolean", "description": "Is currently available to donate" },
+        "eligibility_status": { "type": "string", "enum": ["Eligible", "Ineligible"], "description": "Calculated based on last donation date" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "age", "gender", "blood_group", "phone", "state", "district", "city", "area", "pincode", "availability"]
+    },
+    "Inventory": {
+      "title": "Inventory",
+      "description": "Individual blood packages in storage",
+      "type": "object",
+      "properties": {
+        "inventory_id": { "type": "string" },
+        "blood_group": { "type": "string", "enum": ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] },
+        "quantity": { "type": "integer", "description": "Quantity in ML or Units (e.g. 1)" },
+        "bank_id": { "type": "string", "description": "Blood bank ID where stored" },
+        "bank_name": { "type": "string", "description": "Blood bank name" },
+        "donor_id": { "type": "string", "description": "Reference to Donors if available" },
+        "collection_date": { "type": "string", "format": "date" },
+        "expiry_date": { "type": "string", "format": "date" },
+        "storage_location": { "type": "string", "description": "Refrigerator compartment or shelf label" },
+        "status": { "type": "string", "enum": ["available", "transfered", "expired", "wasted"] }
+      },
+      "required": ["blood_group", "quantity", "bank_id", "collection_date", "expiry_date", "status"]
+    },
+    "BloodRequest": {
+      "title": "BloodRequest",
+      "description": "Emergency blood request raised by hospitals",
+      "type": "object",
+      "properties": {
+        "request_id": { "type": "string" },
+        "hospital_id": { "type": "string" },
+        "hospital_name": { "type": "string" },
+        "blood_group": { "type": "string", "enum": ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] },
+        "units_required": { "type": "integer" },
+        "urgency": { "type": "string", "enum": ["Pending", "Accepted", "Processing", "Completed"] },
+        "state": { "type": "string" },
+        "district": { "type": "string" },
+        "city": { "type": "string" },
+        "contact": { "type": "string" },
+        "status": { "type": "string", "enum": ["Pending", "Accepted", "Processing", "Completed"] },
+        "bank_id": { "type": "string", "description": "Accepting blood bank ID" },
+        "bank_name": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "fulfilledAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["hospital_id", "hospital_name", "blood_group", "units_required", "urgency", "state", "district", "city", "status", "createdAt"]
+    },
+    "Prediction": {
+      "title": "Prediction",
+      "description": "AI analysis predictions for blood inventory demand, shortage, and expiry",
+      "type": "object",
+      "properties": {
+        "prediction_id": { "type": "string" },
+        "blood_group": { "type": "string" },
+        "demand_prediction": { "type": "number", "description": "Expected demand for coming month" },
+        "shortage_probability": { "type": "number", "description": "0 to 1 value" },
+        "risk_level": { "type": "string", "enum": ["Low", "Medium", "High"] },
+        "expected_expiry_units": { "type": "number" },
+        "recommended_inventory": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["blood_group", "demand_prediction", "shortage_probability", "risk_level", "updatedAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Notifications broadcasted internally or to public donors",
+      "type": "object",
+      "properties": {
+        "notification_id": { "type": "string" },
+        "type": { "type": "string", "enum": ["emergency", "low_stock", "expiry", "shortage"] },
+        "message": { "type": "string" },
+        "target_user_id": { "type": "string", "description": "Optional specific user" },
+        "target_blood_group": { "type": "string" },
+        "read": { "type": "boolean" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["type", "message", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles matching Firebase Auth"
+    },
+    "/hospitals/{userId}": {
+      "schema": "Hospital",
+      "description": "Hospitals mapped to user IDs"
+    },
+    "/blood_banks/{userId}": {
+      "schema": "BloodBank",
+      "description": "Blood banks mapped to user IDs"
+    },
+    "/donors/{donorId}": {
+      "schema": "Donor",
+      "description": "Public blood donor registry"
+    },
+    "/inventory/{inventoryId}": {
+      "schema": "Inventory",
+      "description": "Individual blood units currently stored"
+    },
+    "/requests/{requestId}": {
+      "schema": "BloodRequest",
+      "description": "Emergency blood requests from hospitals"
+    },
+    "/predictions/{predictionId}": {
+      "schema": "Prediction",
+      "description": "AI prediction records"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "Platform alerts and emergency broadcasts"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global default-deny rule
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128;
+    }
+
+    // User Access Rules
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && (request.auth.uid == userId);
+    }
+
+    // Hospital Profile Rules
+    match /hospitals/{userId} {
+      allow read: if true;
+      allow write: if isSignedIn() && (request.auth.uid == userId);
+    }
+
+    // Blood Bank Profile Rules
+    match /blood_banks/{userId} {
+      allow read: if true;
+      allow write: if isSignedIn() && (request.auth.uid == userId);
+    }
+
+    // Public Donor and Registered Donor Rules
+    match /donors/{donorId} {
+      allow create: if true; // Public can register as a donor with no login
+      allow read: if true; // Anyone can search availability or match donors
+      allow update, delete: if isSignedIn();
+    }
+
+    // Inventory Rules
+    match /inventory/{inventoryId} {
+      allow read: if true; // Visible to signed-in and search flows
+      allow write: if isSignedIn(); // Only authenticated users (admins, blood bank staff) can manage
+    }
+
+    // Blood Requests
+    match /requests/{requestId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    // Predictions (created/updated by the platform backend/admin)
+    match /predictions/{predictionId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    // Notifications System
+    match /notifications/{notificationId} {
+      allow read: if true;
+      allow write: if true; // Allow creation of notifications from clients for broad support
+    }
+  }
+}

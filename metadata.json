@@ -1,0 +1,10 @@
+{
+  "name": "BloodLink AI",
+  "description": "Intelligent Blood Bank Management and Emergency Response Platform connecting hospitals, blood banks, administrators, and donors with AI-driven inventory tracking, demand forecasting, and emergency routing.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
