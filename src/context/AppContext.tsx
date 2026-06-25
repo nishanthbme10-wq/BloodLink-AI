@@ -153,7 +153,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           if (u) {
             // Retrieve role profile
             try {
-              const userSnap = await getDocs(query(collection(db, "users"), where("id", "==", u.uid)));
+              const userSnap = await getDocs(query(collection(db, "users"), where("uid", "==", u.uid)));
               if (!userSnap.empty) {
                 const data = userSnap.docs[0].data();
                 setUser({

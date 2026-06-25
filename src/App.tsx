@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { AppProvider, useApp } from "./context/AppContext";
-import { Header } from "./components/Header";
-import { LandingPage } from "./components/LandingPage";
 import { AboutPlatform } from "./components/AboutPlatform";
-import { DonorRegistration } from "./components/DonorRegistration";
-import { HospitalPortal } from "./components/HospitalPortal";
-import { BloodBankPortal } from "./components/BloodBankPortal";
 import { AdminPortal } from "./components/AdminPortal";
+import { BloodBankPortal } from "./components/BloodBankPortal";
+import { BloodLinkBot } from "./components/BloodLinkBot";
+import { DonorRegistration } from "./components/DonorRegistration";
+import { Header } from "./components/Header";
+import { HospitalPortal } from "./components/HospitalPortal";
+import { LandingPage } from "./components/LandingPage";
 import { LoginPortal } from "./components/LoginPortal";
+import { AppProvider, useApp } from "./context/AppContext";
 
 function MainAppContent() {
-  const [currentTab, setCurrentTab] = useState("landing");
-  const { user, loginAsDemo } = useApp();
+  const [currentTab, setCurrentTab] = useState("bot_demo");
+    const { user, loginAsDemo } = useApp();
 
   const handleLoginClick = async (role: "admin" | "hospital" | "blood_bank", targetId?: string) => {
     await loginAsDemo(role, targetId);
@@ -33,6 +34,7 @@ function MainAppContent() {
             />
           )}
           {currentTab === "about" && <AboutPlatform />}
+          {currentTab === "bot_demo" && <BloodLinkBot />}
           {currentTab === "donor_registration" && <DonorRegistration />}
           {currentTab === "login" && (
             <LoginPortal onLoginSuccess={(tabToSet) => setCurrentTab(tabToSet)} />

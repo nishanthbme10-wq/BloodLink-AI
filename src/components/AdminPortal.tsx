@@ -1,19 +1,13 @@
+import {
+  Activity,
+  Building2,
+  Database,
+  RefreshCw,
+  ShieldAlert,
+  Users
+} from "lucide-react";
 import React, { useState } from "react";
 import { useApp } from "../context/AppContext";
-import { 
-  Building2, 
-  Users, 
-  Database, 
-  AlertTriangle, 
-  Sparkles, 
-  Activity, 
-  Trash2, 
-  TrendingUp, 
-  RefreshCw, 
-  ShieldAlert, 
-  Calendar,
-  Share2
-} from "lucide-react";
 
 export const AdminPortal: React.FC = () => {
   const { 
@@ -166,11 +160,27 @@ export const AdminPortal: React.FC = () => {
 
       {/* Workspace Display */}
       <div>
-        
-        {/* TAB 1: AI PREDICTIVE CONSOLE */}
-        {adminTab === "ai_console" && (
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            
+      {/* TAB 1: AI PREDICTIVE CONSOLE */}
+{adminTab === "ai_console" && (
+  <>
+    <div className="bg-green-50 border border-green-200 rounded-2xl p-5 mb-6">
+      <h3 className="text-lg font-bold text-green-700">
+        🤖 BloodLink Sentinel WhatsApp Bot
+      </h3>
+
+      <p className="text-sm text-gray-600 mt-2">
+        Emergency blood requests are automatically broadcasted
+        to registered blood banks through WhatsApp groups.
+      </p>
+
+      <div className="mt-4 space-y-2">
+        <div>✅ Registered Blood Banks: 12</div>
+        <div>✅ Active WhatsApp Groups: 3</div>
+        <div>✅ Alerts Sent Today: 24</div>
+      </div>
+    </div>
+
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             {/* COLUMN 1: Demand Prediction Panel */}
             <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm flex flex-col justify-between">
               <div>
@@ -355,6 +365,7 @@ export const AdminPortal: React.FC = () => {
             </div>
 
           </div>
+          </>
         )}
 
         {/* TAB 2: DATABASE DIRECTORIES REGISTRY */}
