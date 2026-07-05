@@ -11,8 +11,9 @@ import { LoginPortal } from "./components/LoginPortal";
 import { AppProvider, useApp } from "./context/AppContext";
 
 function MainAppContent() {
-  const [currentTab, setCurrentTab] = useState("bot_demo");
+  const [currentTab, setCurrentTab] = useState("landing");
     const { user, loginAsDemo } = useApp();
+    console.log("Current User:", user);
 
   const handleLoginClick = async (role: "admin" | "hospital" | "blood_bank", targetId?: string) => {
     await loginAsDemo(role, targetId);

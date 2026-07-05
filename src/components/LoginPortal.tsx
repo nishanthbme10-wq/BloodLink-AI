@@ -39,6 +39,7 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({ onLoginSuccess }) => {
   
     try {
       await loginUser(email, password);
+      console.log("Selected Role:", activeRole);
   
       if (activeRole === "admin") {
         onLoginSuccess("admin_dashboard");

@@ -5,6 +5,7 @@ import firebaseConfig from "../firebase-applet-config.json";
 
 // Initialize Firebase App
 const app = initializeApp(firebaseConfig);
+console.log("PROJECT ID:", app.options.projectId);
 
 // Initialize Auth and Firestore DB instance with database ID correctly specified
 export const db = getFirestore(app);

@@ -1,10 +1,15 @@
-import express from "express";
-import path from "path";
-import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
+import express from "express";
+import path from "path";
+import twilio from "twilio";
+import { createServer as createViteServer } from "vite";
 
 dotenv.config();
+const twilioClient = twilio(
+  process.env.TWILIO_ACCOUNT_SID!,
+  process.env.TWILIO_AUTH_TOKEN!
+);
 
 const app = express();
 app.use(express.json());
@@ -37,6 +42,29 @@ function getGeminiClient(): GoogleGenAI {
 // Health check endpoint
 app.get("/api/health", (req, res) => {
   res.json({ status: "healthy", timestamp: new Date().toISOString() });
+});
+app.post("/api/send-whatsapp", async (req, res) => {
+  try {
+    const { phone, message } = req.body;
+
+    const response = await twilioClient.messages.create({
+      from: process.env.TWILIO_WHATSAPP_NUMBER!,
+      to: `whatsapp:${phone}`,
+      body: message,
+    });
+
+    res.json({
+      success: true,
+      sid: response.sid,
+    });
+  } catch (err: any) {
+    console.error("WhatsApp Error:", err);
+
+    res.status(500).json({
+      success: false,
+      error: err.message,
+    });
+  }
 });
 
 // 1. AI Blood Demand Prediction Endpoint

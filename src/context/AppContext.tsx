@@ -154,8 +154,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             // Retrieve role profile
             try {
               const userSnap = await getDocs(query(collection(db, "users"), where("uid", "==", u.uid)));
+              console.log("AUTH Documents:", userSnap.size);
+
+if (!userSnap.empty) {
+  console.log("AUTH USER:", userSnap.docs[0].data());
+}
               if (!userSnap.empty) {
+                console.log("Firestore User:", userSnap.docs[0].data());
                 const data = userSnap.docs[0].data();
+                console.log("Firestore User Data:", data);
                 setUser({
                   id: u.uid,
                   email: u.email || "",
@@ -168,23 +175,50 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                   contact: data.contact,
                 });
               } else {
-                // If auth exists but database profile doesn't (could happen if cleared), fallback
-                setUser({
-                  id: u.uid,
-                  email: u.email || "",
-                  role: "admin",
-                  name: "Administrator"
-                });
+
+                if (u.email === "admin@bloodlink.ai") {
+                  setUser({
+                    id: u.uid,
+                    email: u.email || "",
+                    role: "admin",
+                    name: "Administrator",
+                  });
+                }
+              
+                else if (u.email === "emergency@apollo.hospital") {
+                  setUser({
+                    id: u.uid,
+                    email: u.email || "",
+                    role: "hospital",
+                    name: "Apollo Specialty Hospital",
+                  });
+                }
+              
+                else if (u.email === "metro.central@bloodlink.org") {
+                  setUser({
+                    id: u.uid,
+                    email: u.email || "",
+                    role: "blood_bank",
+                    name: "Metro Central Blood Bank",
+                  });
+                }
+              
               }
-            } catch (authDbError) {
+            } //catch (authDbError) {
+            //  console.error("Firestore Error:", authDbError);
+
               // Db read access restricted or not matching, default role admin
-              setUser({
-                id: u.uid,
-                email: u.email || "",
-                role: "admin",
-                name: "Administrator"
-              });
-            }
+            //  setUser({
+            //    id: u.uid,
+              //  email: u.email || "",
+             //   role: "admin",
+             //   name: "Administrator"
+            //  });
+          //  }
+          catch (authDbError) {
+            console.error("Firestore Error:", authDbError);
+            return;
+          }
           } else {
             // Keep demo session if active, else null
             setUser((prev) => (prev && prev.id.startsWith("demo_") ? prev : null));
@@ -348,13 +382,89 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       );
   
       const uid = userCredential.user.uid;
+      // Temporary role mapping
+if (email === "admin@bloodlink.ai") {
+  setUser({
+    id: uid,
+    email,
+    role: "admin",
+    name: "Administrator",
+  } as any);
+  return;
+}
+
+if (email === "emergency@apollo.hospital") {
+  setUser({
+    id: uid,
+    email,
+    role: "hospital",
+    name: "Apollo Specialty Hospital",
+  } as any);
+  return;
+}
+
+if (email === "metro.central@bloodlink.org") {
+  setUser({
+    id: uid,
+    email,
+    role: "blood_bank",
+    name: "Metro Central Blood Bank",
+  } as any);
+  return;
+}
   
       const q = query(
         collection(db, "users"),
         where("uid", "==", uid)
       );
   
+       const allUsers = await getDocs(collection(db, "users"));
+
+console.log("===== ALL USERS =====");
+console.log("COUNT =", allUsers.size);
+
+allUsers.forEach((d) => {
+  console.log("DOC ID =", d.id);
+  console.log("DATA =", d.data());
+});
+
+allUsers.forEach((doc) => {
+  console.log(doc.id, doc.data());
+});
+
       const snapshot = await getDocs(q);
+    //  const allUsers = await getDocs(collection(db, "users"));
+
+//console.log("========== USERS ==========");
+
+//allUsers.forEach((doc) => {
+  //console.log(doc.id, doc.data());
+//});
+  ///    console.log("Firebase UID:", uid);
+//console.log("Documents Found:", snapshot.size);
+
+//if (!snapshot.empty) {
+  //console.log("LOGIN USER DATA:", snapshot.docs[0].data());
+//}
+  //    console.log("Firebase UID:", uid);
+//console.log("Documents Found:", snapshot.size);
+
+
+
+if (!snapshot.empty) {
+  const userData = snapshot.docs[0].data();
+
+  console.log("LOGIN USER DATA:", userData);
+
+  setUser({
+    id: uid,
+    email: userData.email,
+    role: userData.role,
+    name: userData.name
+  } as any);
+} else {
+  console.log("No user found in Firestore");
+}
   
       if (!snapshot.empty) {
         const userData = snapshot.docs[0].data();
