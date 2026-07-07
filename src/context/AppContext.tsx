@@ -659,7 +659,7 @@ Status: Pending`
     const rMatch = requests.find(r => r.request_id === requestId);
     if (rMatch) {
       if (status === "Completed") {
-        await fetch("http://localhost:3000/api/send-whatsapp", {
+        await fetch("https://bloodlink-ai-icst.onrender.com/api/send-whatsapp", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
