@@ -44,27 +44,41 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "healthy", timestamp: new Date().toISOString() });
 });
 app.post("/api/send-whatsapp", async (req, res) => {
+
+  console.log("🔥 SEND WHATSAPP API CALLED");
+
   try {
+
     const { phone, message } = req.body;
 
+    console.log("📱 Sending to:", phone);
+
     const response = await twilioClient.messages.create({
-      from: process.env.TWILIO_WHATSAPP_NUMBER!,
+      from: process.env.TWILIO_WHATSAPP_NUMBER,
       to: `whatsapp:${phone}`,
       body: message,
     });
+
+    console.log("✅ Twilio Success");
+    console.log(response);
 
     res.json({
       success: true,
       sid: response.sid,
     });
+
   } catch (err: any) {
-    console.error("WhatsApp Error:", err);
+
+    console.log("❌ TWILIO ERROR");
+    console.log(err);
 
     res.status(500).json({
       success: false,
       error: err.message,
     });
+
   }
+
 });
 
 // 1. AI Blood Demand Prediction Endpoint

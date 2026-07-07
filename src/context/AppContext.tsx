@@ -592,6 +592,35 @@ if (!snapshot.empty) {
       setRequests(prev => [...prev, offlineReq]);
     }
 
+    // Send WhatsApp Alert
+try {
+  await fetch("/api/send-whatsapp", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      phone: "919487151072", // Un number
+      message:
+`🩸 BloodLink AI
+
+🚨 EMERGENCY BLOOD REQUEST
+
+Hospital: ${requestData.hospital_name}
+
+Blood Group: ${requestData.blood_group}
+
+Units Required: ${requestData.units_required}
+
+Location: ${requestData.city}
+
+Status: Pending`
+    }),
+  });
+} catch (err) {
+  console.error("WhatsApp notification failed:", err);
+}
+
     // Add Broadcast Notification
     await addNotification(
       "emergency", 
@@ -629,6 +658,29 @@ if (!snapshot.empty) {
     // Trigger update alert
     const rMatch = requests.find(r => r.request_id === requestId);
     if (rMatch) {
+      if (status === "Completed") {
+        await fetch("http://localhost:3000/api/send-whatsapp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            phone: "919487151072",
+            message:
+      `🩸 BloodLink AI
+      
+      ✅ BLOOD REQUEST COMPLETED
+      
+      Hospital: ${rMatch.hospital_name}
+      
+      Blood Group: ${rMatch.blood_group}
+      
+      Units: ${rMatch.units_required}
+      
+      Status: Completed`
+          })
+        });
+      }
       await addNotification(
         "emergency",
         `Emergency Request Update: ${rMatch.hospital_name}'s request for ${rMatch.blood_group} is now [${status}].`

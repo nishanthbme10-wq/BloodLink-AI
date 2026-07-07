@@ -403,7 +403,9 @@ export const BloodBankPortal: React.FC = () => {
                             className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-4 py-2 rounded-lg transition"
                           >
                             Accept Request
+                            
                           </button>
+                          
                         )}
                         {req.status === "Processing" && req.bank_id === user?.id && (
                           <button
